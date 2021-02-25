@@ -23,10 +23,8 @@ class Game:
     def __init__(self,partner, difficulty):
         print(difficulty)
 
-        # Disable the easy game button
-        #partner.easy_button.config(state=DISABLED)
-
-        self.button_list = []
+        # Disable the easy game button (not yet implemented)
+        # partner.easy_button.config(state=DISABLED)
 
         # GUI Setup
         self.game_box = Toplevel()
