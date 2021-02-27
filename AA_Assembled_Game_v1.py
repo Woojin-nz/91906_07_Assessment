@@ -17,7 +17,7 @@ class Start:
 
         # Sub text and Instructions for the game row 1
         self.subtext_label = Label(self.start_frame, text="How well do you know world's capitals? \n\n"
-                                                          "You'll be presented with 15 capitals from a list of 195 "
+                                                          "You'll be presented with 15 capitals from a list of 249 "
                                                           "capitals.\n "
                                                           "You'll need to match the capitals with their corresponding "
                                                           "country. \n\n "
@@ -113,7 +113,7 @@ class Game:
         self.capital_label.grid(row=0)
 
         # Setup grid for answer buttons row 2
-        self.top_answers_frame = Frame(self.game_box)
+        self.top_answers_frame = Frame(self.game_frame)
         self.top_answers_frame.grid(row=2)
 
         # Top level answers buttons row 2.0
