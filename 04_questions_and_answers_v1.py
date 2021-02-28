@@ -1,7 +1,10 @@
-import pandas
+import csv
 
+with open("country-list.csv", newline="") as f:
+    reader = csv.reader(f)
 
-x = open("country-list.csv")
-print(x)
+    next(reader)
 
+    capital_list = [tuple(row) for row in reader]
 
+print(capital_list)
