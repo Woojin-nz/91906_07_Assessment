@@ -1,10 +1,6 @@
-import csv
+import pandas
 
-with open("country-list.csv", newline="") as f:
-    reader = csv.reader(f)
+colnames = ["Country", "Capital"]
+data = pandas.read_csv("country-list.csv", names=colnames)
 
-    next(reader)
-
-    capital_list = [tuple(row) for row in reader]
-
-print(capital_list)
+print(data)
