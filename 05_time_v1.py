@@ -1,28 +1,16 @@
-from tkinter import *
 import time
 
+t=30
 
-root = Tk()
-root.title("Clock")
-
-
-
-def timer():
-    t = 30
-    for i in range(0,t):
-        second = t-1
-        my_label.config(text="{}".format(second))
-        my_label.after(1000,timer)
-
-
-my_label = Label(root, text="", font="Helvetica 48")
-my_label.grid(pady=20)
-
-timer()
-
-# my_label.after(1000, update)
+def countdown(t):
+    while t:
+        secs = t
+        timer="{:02d}".format(secs)
+        print(timer, end="\r")
+        time.sleep(1)
+        t -= 1
+        print(t)
+    print("Time Over!")
 
 
-
-
-root.mainloop()
+countdown(t)
