@@ -22,14 +22,15 @@ for i in range(0,15):
     question = question_ans[1]
     answer = question_ans[0]
 
-    print("Question:Which Country has the capital {}?".format(question))
-    user_answer = input("Answer:")
+    print("Question: Which Country has the capital {}?".format(question))
+    user_answer = input("Answer: ")
     if user_answer.casefold() == answer.casefold():
         print("Correct!")
         score += 1
     else:
         print("Incorrect, the correct answer is {}".format(answer))
 
-print("You managed to get {} right out of 15".format(score))
+total_score= score/15
+print("You managed to get {} right out of 15, {:.2f}% correct".format(score,total_score))
 
 
