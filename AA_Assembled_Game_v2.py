@@ -4,8 +4,6 @@ import csv
 import random
 import string
 
-
-
 class Start:
     def __init__(self):
         background = "#FFF4C3"
@@ -64,7 +62,6 @@ class Start:
                                           "are a total of 15 rounds.\n\n"
                                           "Easy mode is a multiple choice quiz.\n"
                                           "Hard mode you must type in the answer.")
-
 class Help:
     def __init__(self, partner):
         background = "#FFF4C3"
@@ -102,7 +99,6 @@ class Help:
         # Put help button back to normal...
         partner.help_button.config(state=NORMAL)
         self.help_box.destroy()
-
 class Easy:
     def __init__(self,partner):
 
@@ -155,6 +151,7 @@ class Hard:
 
         #Inital score
         score=0
+
         # Import the csv file, name of csv file goes here...
         with open('country-list.csv', 'r') as f:
             # make csv file into list
@@ -162,6 +159,7 @@ class Hard:
             next(f)
             my_list = list(file)
 
+        # Loop the quiz 15 times
         for i in range(0, 15):
             # choose an item from the main list, this item is itself a list
             question_ans = random.choice(my_list)
@@ -181,9 +179,29 @@ class Hard:
         self.capital_label.grid(row=0)
 
         # Setup Answer Entry row 1
-
         self.answer_entry = Entry(self.game_frame, font="Helvetica 15 bold")
         self.answer_entry.grid(row=1, pady=10, padx=5)
+
+        # Button to press when users have entered the country row 2
+        self.answer_button = Button(self.game_frame, text="Guess",font="Helvetica 10 bold",
+                                    command=self.check_answer)
+        self.answer_button.grid(row=2)
+
+        # Correct or incorrect Label row 3
+        self.answer_box =Label(self.game_frame, text="", font="Helvetica 15 bold")
+        self.answer_box.grid(row=3)
+
+
+    def check_answer(self):
+        user_answer = self.answer_entry.get()
+
+        score = 0
+        if user_answer == answer:
+            self.answer_box.config(text="Correct!")
+            score += 1
+        else:
+            self.answer_box.config(text="Incorrect, the correct country is {}".format(answer))
+
 
 
 
