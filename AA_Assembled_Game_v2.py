@@ -36,11 +36,11 @@ class Start:
 
         # to_game buttons row 2.0
         self.easy_button = Button(self.to_game_frame, text="Easy", font=button_font, bg="#99CCFF",
-                                  command=lambda:self.to_easy(), height=2, width=13, borderwidth=2)
+                                  command=self.to_easy, height=2, width=13, borderwidth=2)
         self.easy_button.grid(row=0, column=0, padx=10, pady=5)
 
         self.hard_button = Button(self.to_game_frame, text="Hard", font=button_font, bg="#FFBAB8",
-                                  command=lambda:self.to_hard(), height=2, width=13, borderwidth=2)
+                                  command=self.to_hard, height=2, width=13, borderwidth=2)
         self.hard_button.grid(row=0, column=1, padx=10, pady=5)
 
         # Help Button row 3
@@ -49,16 +49,15 @@ class Start:
         self.help_button.grid(row=3, pady=5)
 
     def to_easy(self):
-        Easy(self)
+        Easy()
 
     def to_hard(self):
-        Hard(self)
+        Hard()
 
     def help(self):
         get_help = Help(self)
-        get_help.help_text.configure(text="The quiz will present you with a capital \n You must identify the "
-                                          "corresponding country. \n\n The game has a 30 second timer for each round "
-                                          "\n There "
+        get_help.help_text.configure(text="The quiz will present you with a capital \n\n You must identify the "
+                                          "corresponding country.\n\n There "
                                           "are a total of 15 rounds.\n\n"
                                           "Easy mode is a multiple choice quiz.\n"
                                           "Hard mode you must type in the answer.")
@@ -100,7 +99,7 @@ class Help:
         partner.help_button.config(state=NORMAL)
         self.help_box.destroy()
 class Easy:
-    def __init__(self,partner):
+    def __init__(self):
 
         # Disable the easy game button (not yet implemented)
         # partner.easy_button.config(state=DISABLED)
@@ -145,12 +144,11 @@ class Easy:
         # Print corresponding number based on location
         # TL = 0 TR =1 BL = 2 BR = 3
         print(location)
-
 class Hard:
-    def __init__(self,partner):
+    def __init__(self):
 
-        #Inital score
-        score=0
+        # Background color is light yellow
+        background = "#FFF4C3"
 
         # Import the csv file, name of csv file goes here...
         with open('country-list.csv', 'r') as f:
@@ -159,52 +157,85 @@ class Hard:
             next(f)
             my_list = list(file)
 
-        # Loop the quiz 15 times
-        for i in range(0, 15):
-            # choose an item from the main list, this item is itself a list
-            question_ans = random.choice(my_list)
+        # choose an item from the main list, this item is itself a list
+        question_ans = random.choice(my_list)
+        print(question_ans)
 
-            # first item in small list
-            question = question_ans[1]
-            answer = question_ans[0]
+        # Inital Score
+        self.score = 0
+
+        # Amounts of games played
+        self.played = 0
+
+        # first item in small list
+        question = question_ans[1]
+        self.answer = question_ans[0]
 
         # GUI Setup
         self.game_box = Toplevel()
-        self.game_frame = Frame(self.game_box)
+        self.game_frame = Frame(self.game_box, bg =background)
         self.game_frame.grid()
 
         # Capital Label row 0
         self.capital_label = Label(self.game_frame, text=question,
-                                   font="Helvetica 15 bold")
-        self.capital_label.grid(row=0)
+                                   font="Helvetica 15 bold", bg=background)
+        self.capital_label.grid(row=0, padx=5, pady=10)
 
         # Setup Answer Entry row 1
         self.answer_entry = Entry(self.game_frame, font="Helvetica 15 bold")
-        self.answer_entry.grid(row=1, pady=10, padx=5)
+        self.answer_entry.grid(row=1, pady=10, padx=30)
 
-        # Button to press when users have entered the country row 2
-        self.answer_button = Button(self.game_frame, text="Guess",font="Helvetica 10 bold",
-                                    command=self.check_answer)
-        self.answer_button.grid(row=2)
+
+        # Buttom frame for "guess" and "next" row 2
+        self.button_frame = Frame(self.game_frame, bg=background)
+        self.button_frame.grid(row=2)
+
+        # Button to press when users have entered the country row 2.0 column 0
+        self.answer_button = Button(self.button_frame, text="Guess",font="Helvetica 10 bold",
+                                    command=lambda: self.check_answer(self.answer))
+        self.answer_button.grid(row=0, column=0, padx=5)
+
+        #Button to go to the next question row 2.0 column 1
+        self.next_button = Button(self.button_frame, text="Next", font="Helvetica 10 bold",
+                                  command=lambda: self.next_question(my_list))
+        self.next_button.grid(row=0,column=1, padx=5)
+        self.next_button.config(state=DISABLED)
 
         # Correct or incorrect Label row 3
-        self.answer_box =Label(self.game_frame, text="", font="Helvetica 15 bold")
+        self.answer_box =Label(self.game_frame, text="", font="Helvetica", bg=background)
         self.answer_box.grid(row=3)
 
+        # Total amount of correct answers and games played row 4
+        self.points = Label(self.game_frame, text="{} correct / {} rounds played".format(self.score,self.played),
+                            font="Helvetica 10", bg=background)
+        self.points.grid(row=4)
 
-    def check_answer(self):
+    def check_answer(self,answer):
         user_answer = self.answer_entry.get()
-
-        score = 0
-        if user_answer == answer:
-            self.answer_box.config(text="Correct!")
-            score += 1
+        self.played += 1
+        if user_answer.casefold() == answer.casefold():
+            self.answer_box.config(text="Correct!", fg="green")
+            self.score += 1
         else:
-            self.answer_box.config(text="Incorrect, the correct country is {}".format(answer))
+            self.answer_box.config(text="The correct country is {}".format(answer), fg="#F62121")
+        self.next_button.config(state=NORMAL)
+        self.answer_button.config(state=DISABLED)
+        self.points.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
 
-
-
+    def next_question(self,list):
+        if self.played == 15:
+         print("STOP")
+        else:
+            question_ans = random.choice(list)
+            question = question_ans[1]
+            self.answer = question_ans[0]
+            self.capital_label.config(text=question)
+            self.answer_entry.delete(0, "end")
+            self.answer_box.config(text="")
+            self.next_button.config(state=DISABLED)
+            self.answer_button.config(state=NORMAL)
+            print(question_ans)
 
 
 
