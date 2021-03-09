@@ -22,6 +22,8 @@ for i in range(0,15):
     question = question_ans[1]
     answer = question_ans[0]
 
+    print(question_ans)
+
     print("Question: Which Country has the capital {}?".format(question))
     user_answer = input("Answer: ")
     if user_answer.casefold() == answer.casefold():
