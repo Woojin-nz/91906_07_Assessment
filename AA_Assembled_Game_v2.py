@@ -190,6 +190,8 @@ class Hard:
         # Setup Answer Entry row 1
         self.answer_entry = Entry(self.game_frame, font="Helvetica 15 bold")
         self.answer_entry.grid(row=1, pady=10, padx=30)
+        self.answer_entry.focus()
+        self.answer_entry.bind('<Return>', lambda e:self.check_answer())
 
         # Buttom frame for "guess" and "next" row 2
         self.button_frame = Frame(self.game_frame, bg=background)
@@ -197,7 +199,7 @@ class Hard:
 
         # Button to press when users have entered the country row 2.0 column 0
         self.answer_button = Button(self.button_frame, text="Guess", font="Helvetica 10 bold",
-                                    command=lambda: self.check_answer(self.answer))
+                                    command=lambda: self.check_answer())
         self.answer_button.grid(row=0, column=0, padx=5)
 
         # Button to go to the next question row 2.0 column 1
@@ -205,6 +207,7 @@ class Hard:
                                   command=lambda: self.next_question(my_list))
         self.next_button.grid(row=0, column=1, padx=5)
         self.next_button.config(state=DISABLED)
+        self.next_button.bind('<Return>', lambda e:self.next_question(my_list))
 
         # Correct or incorrect Label row 3
         self.answer_box = Label(self.game_frame, text="", font="Helvetica", bg=background)
@@ -215,16 +218,19 @@ class Hard:
                             font="Helvetica 10", bg=background)
         self.points.grid(row=4)
 
-    def check_answer(self, answer):
+    def check_answer(self):
         user_answer = self.answer_entry.get()
         self.played += 1
-        if user_answer.casefold() == answer.casefold():
+        if user_answer.casefold() == self.answer.casefold():
             self.answer_box.config(text="Correct!", fg="green")
             self.score += 1
+            self.answer_entry.config(bg="#ACF392")
         else:
-            self.answer_box.config(text="The correct country is {}".format(answer), fg="#F62121")
+            self.answer_box.config(text="The correct country is {}".format(self.answer), fg="#F62121")
+            self.answer_entry.config(bg="#F39292")
         self.next_button.config(state=NORMAL)
         self.answer_button.config(state=DISABLED)
+        self.next_button.focus()
         self.points.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
     def next_question(self, list):
@@ -239,6 +245,8 @@ class Hard:
             self.answer_box.config(text="")
             self.next_button.config(state=DISABLED)
             self.answer_button.config(state=NORMAL)
+            self.answer_entry.config(bg="white")
+            self.answer_entry.focus()
             print(question_ans)
 
 
