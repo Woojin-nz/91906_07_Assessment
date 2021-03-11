@@ -71,81 +71,50 @@ class Game:
 
         # Capital Label row 0
         self.capital_label = Label(self.game_frame, text=self.question,
-                                   font="Helvetica 15 bold")
+                                   font="Helvetica 20 bold")
         self.capital_label.grid(row=0)
-
-        # Label showing correct or incorrect row 1
-        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=35, wrap=300)
-        self.answer_box.grid(row=1)
 
         # Setup grid for answer buttons row 2
         self.top_answers_frame = Frame(self.game_box, width=50, height=50)
         self.top_answers_frame.grid(row=2, padx=5)
 
-        # width, wrap, font height for buttons
+        # width, wrap, font and height for buttons
         wt=15
         ht=2
         wr=170
-        ft="Helvetica 15"
+        ft= "Helvetica 15"
 
         # Top level answers buttons row 2.0
         self.top_left_answer_button = Button(self.top_answers_frame, text=top_left,
                                              font=ft, padx=5, pady=5,width=wt,height=ht,wrap=wr,
                                              command=lambda: self.reveal_answer(top_left))
-        self.top_left_answer_button.grid(column=0, row=0,padx=5,pady=5)
+        self.top_left_answer_button.grid(column=0, row=0,padx=10,pady=5)
 
         self.top_right_answer_button = Button(self.top_answers_frame, text=top_right,
                                              font=ft, padx=5,pady=5,width=wt,height=ht,wrap=wr,
                                              command=lambda: self.reveal_answer(top_right))
-        self.top_right_answer_button.grid(column=1, row=0,padx=5,pady=5)
+        self.top_right_answer_button.grid(column=1, row=0,padx=10,pady=5)
 
         # Bottom level answers buttons row 2.1
         self.bottom_left_answer_button = Button(self.top_answers_frame, text=bottom_left,
                                              font=ft, padx=5, pady=5,width=wt,height=ht,wrap=wr,
                                              command=lambda: self.reveal_answer(bottom_left))
-        self.bottom_left_answer_button.grid(column=0, row=1,padx=5,pady=5)
+        self.bottom_left_answer_button.grid(column=0, row=1,padx=10,pady=5)
 
         self.bottom_right_answer_button = Button(self.top_answers_frame, text=bottom_right,
                                               font=ft, padx=5, pady=5,width=wt,height=ht,wrap=wr,
                                               command=lambda: self.reveal_answer(bottom_right))
-        self.bottom_right_answer_button.grid(column=1, row=1,padx=5,pady=5)
+        self.bottom_right_answer_button.grid(column=1, row=1,padx=10,pady=5)
 
-        # Label for the score and games played row 3
-        self.score_label = Label(self.game_box, text="{} correct, {} rounds played".format(self.score,self.played))
-        self.score_label.grid(row=3)
 
-        # The Next button to proceed to the next round row 4
-        self.next_button = Button(self.game_box, text="Next", command=self.to_next)
-        self.next_button.grid(row=4)
-
-        # Disable the next button initially,
-        self.next_button.config(state=DISABLED)
 
     def reveal_answer(self, location):
-
-        # Disable all the buttons
-        self.top_left_answer_button.config(state=DISABLED)
-        self.top_right_answer_button.config(state=DISABLED)
-        self.bottom_left_answer_button.config(state=DISABLED)
-        self.bottom_right_answer_button.config(state=DISABLED)
-
-        # Enable the next_button
-        self.next_button.config(state=NORMAL)
-
-        # Increase total rounds played by 1
-        self.played += 1
         if location == self.answer:
-            self.answer_box.config(text="Correct!", fg="green")
+            self.answer_box.config(text="Correct!",fg="green")
             self.score += 1
         else:
-            self.answer_box.config(text="Incorrect, correct Country is {}".format(self.answer), fg="red")
-
-        # Update the score that the user has
-        self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
-    def to_next(self):
-        print("HYES")
-
-
+            self.answer_box.config(text="Incorrect, the correct country is {}".format(self.answer),fg="red")
+        print(self.score)
 
 
 
