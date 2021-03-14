@@ -166,7 +166,7 @@ class Easy:
         self.capital_label.grid(row=0)
 
         # Label showing correct or incorrect row 1
-        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=35, wrap=300, bg=background)
+        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=45, wrap=300, bg=background)
         self.answer_box.grid(row=1)
 
         # Setup grid for answer buttons row 2
@@ -210,15 +210,15 @@ class Easy:
         self.button_frame = Frame(self.game_box, bg=background)
         self.button_frame.grid(row=4)
 
-        # The Next button to proceed to the next round row 0 column 0
-        self.next_button = Button(self.button_frame, text="Next", command=lambda: self.to_next(my_list), width=5,
-                                  font="Helvetica 10 bold")
-        self.next_button.grid(row=0, column=0, padx=5)
-
-        # The hint button to get the hint for this country row 0 column 1
+        # The hint button to get the hint for this country row 0 column 0
         self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=5,
                                   font="Helvetica 10 bold")
-        self.hint_button.grid(row=0, column=1, padx=5)
+        self.hint_button.grid(row=0, column=0, padx=5)
+
+        # The Next button to proceed to the next round row 0 column 1
+        self.next_button = Button(self.button_frame, text="Next", command=lambda: self.to_next(my_list), width=5,
+                                  font="Helvetica 10 bold")
+        self.next_button.grid(row=0, column=1, padx=5)
 
         # Disable the next button initially,
         self.next_button.config(state=DISABLED)
@@ -243,7 +243,7 @@ class Easy:
             self.score += 1
 
         else:
-            self.answer_box.config(text="Incorrect, correct Country is {}".format(self.answer), fg="red")
+            self.answer_box.config(text="Incorrect, correct country is {}".format(self.answer), fg="red")
 
         # Update the score that the user has
         self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
@@ -357,20 +357,20 @@ class Hard:
                                     command=lambda: self.check_answer())
         self.answer_button.grid(row=0, column=0, padx=5)
 
-        # Button to go to the next question row 2.0 column 1
+        # The hint button to get the hint for this country row 2 column 1
+        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=5,
+                                  font="Helvetica 10 bold")
+        self.hint_button.grid(row=0, column=1, padx=5)
+
+        # Button to go to the next question row 2.0 column 2
         self.next_button = Button(self.button_frame, text="Next", font="Helvetica 10 bold",
                                   command=lambda: self.next_question(my_list))
-        self.next_button.grid(row=0, column=1, padx=5)
+        self.next_button.grid(row=0, column=2, padx=5)
         self.next_button.config(state=DISABLED)
         self.next_button.bind('<Return>', lambda e: self.next_question(my_list))
 
-        # The hint button to get the hint for this country row 2 column 2
-        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=5,
-                                  font="Helvetica 10 bold")
-        self.hint_button.grid(row=0, column=2, padx=5)
-
         # Correct or incorrect Label row 3
-        self.answer_box = Label(self.game_frame, text="", font="Helvetica", bg=background)
+        self.answer_box = Label(self.game_frame, text="", font="Helvetica", bg=background, width=33)
         self.answer_box.grid(row=3)
 
         # Total amount of correct answers and games played row 4
@@ -386,7 +386,7 @@ class Hard:
             self.score += 1
             self.answer_entry.config(bg="#ACF392")
         else:
-            self.answer_box.config(text="The correct country is {}".format(self.answer), fg="#F62121")
+            self.answer_box.config(text="The country is located in {}".format(self.answer), fg="#F62121")
             self.answer_entry.config(bg="#F39292")
         self.next_button.config(state=NORMAL)
         self.answer_button.config(state=DISABLED)
