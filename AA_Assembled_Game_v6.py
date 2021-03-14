@@ -2,6 +2,7 @@ from tkinter import *
 from functools import partial
 import csv
 import random
+import re
 
 
 class Start:
@@ -110,7 +111,7 @@ def to_quit():
 
 
 class Easy:
-    def __init__(self,game_history):
+    def __init__(self):
 
         # Background color is light yellow
         background = "#FFF4C3"
@@ -313,6 +314,9 @@ class Hard:
         # Background color is light yellow
         background = "#FFF4C3"
 
+        # Game History List
+        self.game_history =[]
+
         # Import the csv file, name of csv file goes here...
         with open('country-capitals.csv', 'r') as f:
             # make csv file into list
@@ -382,22 +386,28 @@ class Hard:
         self.points.grid(row=4)
 
     def check_answer(self):
-        # Game History List
-        self.game_history =[]
         user_answer = self.answer_entry.get()
         self.played += 1
         if user_answer.casefold() == self.answer.casefold():
             self.answer_box.config(text="Correct!", fg="green")
             self.score += 1
             self.answer_entry.config(bg="#ACF392")
+
             # History to be appended if correct
-            guess_history_correct = "{}, your answer was correct"format(self.answer)
+            guess_history_correct = \
+                "{}, your answer was correct".format(self.answer)
             self.game_history.append(guess_history_correct)
+
         else:
             self.answer_box.config(text="The country is located in {}".format(self.answer), fg="#F62121")
             self.answer_entry.config(bg="#F39292")
-            guess_history_incorrect = "{}, you guessed {}".format(self.answer,user_answer)
+
+            # History to be appended if incorrect
+            guess_history_incorrect = \
+                "{}, you guessed {}".format(self.answer,user_answer)
             self.game_history.append(guess_history_incorrect)
+
+
         self.next_button.config(state=NORMAL)
         self.answer_button.config(state=DISABLED)
         self.next_button.focus()
@@ -516,12 +526,115 @@ class End:
         self.end_box.destroy()
 
     def to_export(self,history):
-        Export(history)
+        Export(self,history)
 
 class Export:
-    def __init__(self,history):
-        print(history)
-        print(len(history))
+    def __init__(self,partner,history):
+
+        # Background Color is light yellow
+        background="#FFF4C3"
+
+        # disable export button
+        partner.end_export_button.config(state=DISABLED)
+
+        # Sets up child window (ie: export box)
+        self.export_box = Toplevel()
+
+        # If users press 'x' cross at the top, closes export and 'releases' export button.
+        self.export_box.protocol('WM_DELETE_WINDOW', partial(self.close_export, partner))
+
+        # Set up GUI Frame
+        self.export_frame = Frame(self.export_box, width=300, bg=background)
+        self.export_frame.grid()
+
+        # Set up Export heading (row 0)
+        self.how_heading = Label(self.export_frame, text="Export / Instructions",
+                                 font="Arial 15 bold", bg=background)
+        self.how_heading.grid(row=0)
+
+        # Export text (label, row 1)
+        self.export_text = Label(self.export_frame, text="Enter a filename in the box below",
+                                 justify=LEFT, width=40, wrap=250, bg=background)
+        self.export_text.grid(row=1)
+
+        # Warning text (label, row2)
+        self.export_text = Label(self.export_frame, text="If the filename you entered already exists,"
+                                                         "it will be overwritten.", justify=LEFT,
+                                 fg='red', font="Arial 10 italic",bg=background,
+                                 wrap=225, padx=10, pady=10)
+        self.export_text.grid(row=2, pady=10)
+
+        # Filename Entry Box (row 3)
+        self.filename_entry = Entry(self.export_frame, width=20,
+                                    font="Arial 14 bold", justify=CENTER)
+        self.filename_entry.grid(row=3, pady=10)
+
+        # Error Message Labels (initially blank, row 4)
+        self.save_error_label = Label(self.export_frame, text="", fg="maroon", bg=background
+                                      )
+        self.save_error_label.grid(row=4)
+
+        # Save / Cancel Frame (row 5)
+        self.save_cancel_frame = Frame(self.export_frame, bg=background)
+        self.save_cancel_frame.grid(row=5, pady=10)
+
+        # Save and Cancel buttons (row 0 of save_cancel_frame)
+        self.save_button = Button(self.save_cancel_frame, text="Save",
+                                  command=partial(lambda: self.save_history(partner,history)))
+        self.save_button.grid(row=0, column=0)
+
+        self.cancel_button = Button(self.save_cancel_frame, text="Cancel",
+                                    command=partial(self.close_export, partner))
+        self.cancel_button.grid(row=0, column=1)
+
+    def close_export(self, partner):
+        # Put export button back to normal...
+        partner.end_export_button.config(state=NORMAL)
+        self.export_box.destroy()
+
+    def save_history(self, partner, history):
+
+        valid_char = "[A-Za-z0-9_]"
+        has_error = "no"
+
+        filename = self.filename_entry.get()
+
+        for letter in filename:
+            if re.match(valid_char, letter):
+                continue
+
+            elif letter == " ":
+                problem = " (no spaces allowed)"
+
+            else:
+                problem = ("(no {}'s allowed)".format(letter))
+            has_error = "yes"
+            break
+
+        if filename == "":
+            problem = "can't be blank"
+            has_error = "yes"
+
+        if has_error == "yes":
+            self.save_error_label.config(text="Invalid filename - {}".format(problem))
+
+            self.filename_entry.config(bg="#ffafaf")
+
+
+        else:
+            filename = filename + ".txt"
+
+            f = open(filename, "w+")
+
+            # Heading for rounds
+            f.write("Here are your guesses \n\n")
+
+            for item in history:
+                f.write(item + "\n")
+
+            f.close()
+
+            self.close_export(partner)
 
 
 # main routine
