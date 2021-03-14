@@ -2,7 +2,6 @@ from tkinter import *
 from functools import partial
 import csv
 import random
-import string
 
 
 class Start:
@@ -137,7 +136,6 @@ class Easy:
         incorrect1 = yes[0]
         incorrect2 = no[0]
         incorrect3 = ok[0]
-        print(question_ans)
 
         # I made the button_list a list so the list can be randomized so that the answer button locations is always
         # different.
@@ -259,7 +257,6 @@ class Easy:
             incorrect1 = yes[0]
             incorrect2 = no[0]
             incorrect3 = ok[0]
-            print(question_ans)
 
             self.capital_label.config(text=self.question)
 
@@ -296,7 +293,6 @@ class Hard:
 
         # choose an item from the main list, this item is itself a list
         question_ans = random.choice(my_list)
-        print(question_ans)
 
         # Inital Score
         self.score = 0
