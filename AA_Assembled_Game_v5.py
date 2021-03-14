@@ -32,7 +32,7 @@ class Start:
         self.to_game_frame.grid(row=2)
 
         # Button Font
-        button_font =  ("Arial 15 bold")
+        button_font = "Arial 15 bold"
 
         # to_game buttons row 2.0
         self.easy_button = Button(self.to_game_frame, text="Easy", font=button_font, bg="#99CCFF",
@@ -55,7 +55,6 @@ class Start:
     def to_hard(self):
         Hard()
         self.start_frame.destroy()
-
 
     def help(self):
         get_help = Help(self)
@@ -105,6 +104,10 @@ class Help:
         self.help_box.destroy()
 
 
+def to_quit():
+    root.destroy()
+
+
 class Easy:
     def __init__(self):
 
@@ -118,7 +121,7 @@ class Easy:
             next(f)
             my_list = list(file)
 
-        # Inital Score
+        # Initial Score
         self.score = 0
 
         # Amounts of games played
@@ -155,8 +158,7 @@ class Easy:
         self.game_box = Toplevel(bg=background)
         self.game_frame = Frame(self.game_box, bg=background)
         self.game_frame.grid()
-        self.game_box.protocol('WM_DELETE_WINDOW', self.to_quit)
-
+        self.game_box.protocol('WM_DELETE_WINDOW', to_quit)
 
         # Capital Label row 0
         self.capital_label = Label(self.game_frame, text=self.question,
@@ -164,11 +166,11 @@ class Easy:
         self.capital_label.grid(row=0)
 
         # Label showing correct or incorrect row 1
-        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=35, wrap=300,bg=background)
+        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=35, wrap=300, bg=background)
         self.answer_box.grid(row=1)
 
         # Setup grid for answer buttons row 2
-        self.top_answers_frame = Frame(self.game_box, width=50, height=50,bg=background)
+        self.top_answers_frame = Frame(self.game_box, width=50, height=50, bg=background)
         self.top_answers_frame.grid(row=2, padx=5)
 
         # width, wrap, font height for buttons
@@ -179,29 +181,29 @@ class Easy:
 
         # Top level answers buttons row 2.0
         self.top_left_answer_button = Button(self.top_answers_frame, text=self.top_left,
-                                             font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr,bg="#EEE6D2",
+                                             font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
                                              command=lambda: self.reveal_answer(self.top_left))
         self.top_left_answer_button.grid(column=0, row=0, padx=5, pady=5)
 
         self.top_right_answer_button = Button(self.top_answers_frame, text=self.top_right,
-                                              font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr,bg="#EEE6D2",
+                                              font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
                                               command=lambda: self.reveal_answer(self.top_right))
         self.top_right_answer_button.grid(column=1, row=0, padx=5, pady=5)
 
         # Bottom level answers buttons row 2.1
         self.bottom_left_answer_button = Button(self.top_answers_frame, text=self.bottom_left,
-                                                font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr,bg="#EEE6D2",
+                                                font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
                                                 command=lambda: self.reveal_answer(self.bottom_left))
         self.bottom_left_answer_button.grid(column=0, row=1, padx=5, pady=5)
 
         self.bottom_right_answer_button = Button(self.top_answers_frame, text=self.bottom_right,
-                                                 font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr,bg="#EEE6D2",
+                                                 font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
                                                  command=lambda: self.reveal_answer(self.bottom_right))
         self.bottom_right_answer_button.grid(column=1, row=1, padx=5, pady=5)
 
         # Label for the score and games played row 3
-        self.score_label = Label(self.game_box, text="{} correct, {} rounds played".format(self.score, self.played)
-                                 ,bg=background)
+        self.score_label = Label(self.game_box, text="{} correct, {} rounds played".format(self.score, self.played),
+                                 bg=background)
         self.score_label.grid(row=3)
 
         # Button frames for next and hint button row 4
@@ -214,8 +216,9 @@ class Easy:
         self.next_button.grid(row=0, column=0, padx=5)
 
         # The hint button to get the hint for this country row 0 column 1
-        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=5, font="Helvetica 10 bold")
-        self.hint_button.grid(row=0, column=1,padx=5)
+        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=5,
+                                  font="Helvetica 10 bold")
+        self.hint_button.grid(row=0, column=1, padx=5)
 
         # Disable the next button initially,
         self.next_button.config(state=DISABLED)
@@ -245,7 +248,7 @@ class Easy:
         # Update the score that the user has
         self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
-    def to_next(self, list):
+    def to_next(self, capital_list):
         # if the amount of rounds played is 15 the player is taken to the end screen
         if self.played == 15:
             End(self.score)
@@ -261,10 +264,10 @@ class Easy:
             self.answer_box.config(text="")
 
             # chooses four different countries / capitals from the list
-            question_ans = random.choice(list)
-            yes = random.choice(list)
-            no = random.choice(list)
-            ok = random.choice(list)
+            question_ans = random.choice(capital_list)
+            yes = random.choice(capital_list)
+            no = random.choice(capital_list)
+            ok = random.choice(capital_list)
 
             # Defining variables for the capitals and countries,
             # question is the capital in question
@@ -300,10 +303,6 @@ class Easy:
         get_hint = Hint(self)
         get_hint.help_text.configure(text="The country is located in: {}".format(self.hint))
 
-    def to_quit(self):
-        root.destroy()
-
-
 
 class Hard:
     def __init__(self):
@@ -321,7 +320,7 @@ class Hard:
         # choose an item from the main list, this item is itself a list
         question_ans = random.choice(my_list)
 
-        # Inital Score
+        # Initial Score
         self.score = 0
 
         # Amounts of games played
@@ -336,8 +335,7 @@ class Hard:
         self.game_box = Toplevel()
         self.game_frame = Frame(self.game_box, bg=background)
         self.game_frame.grid()
-        self.game_box.protocol('WM_DELETE_WINDOW', self.to_quit)
-
+        self.game_box.protocol('WM_DELETE_WINDOW', to_quit)
 
         # Capital Label row 0
         self.capital_label = Label(self.game_frame, text=question,
@@ -348,9 +346,9 @@ class Hard:
         self.answer_entry = Entry(self.game_frame, font="Helvetica 15 bold")
         self.answer_entry.grid(row=1, pady=10, padx=30)
         self.answer_entry.focus()
-        self.answer_entry.bind('<Return>', lambda e:self.check_answer())
+        self.answer_entry.bind('<Return>', lambda e: self.check_answer())
 
-        # Buttom frame for "guess" and "next" row 2
+        # Button frame for "guess" and "next" row 2
         self.button_frame = Frame(self.game_frame, bg=background)
         self.button_frame.grid(row=2)
 
@@ -364,11 +362,12 @@ class Hard:
                                   command=lambda: self.next_question(my_list))
         self.next_button.grid(row=0, column=1, padx=5)
         self.next_button.config(state=DISABLED)
-        self.next_button.bind('<Return>', lambda e:self.next_question(my_list))
+        self.next_button.bind('<Return>', lambda e: self.next_question(my_list))
 
         # The hint button to get the hint for this country row 2 column 2
-        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=5, font="Helvetica 10 bold")
-        self.hint_button.grid(row=0, column=2,padx=5)
+        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=5,
+                                  font="Helvetica 10 bold")
+        self.hint_button.grid(row=0, column=2, padx=5)
 
         # Correct or incorrect Label row 3
         self.answer_box = Label(self.game_frame, text="", font="Helvetica", bg=background)
@@ -394,14 +393,14 @@ class Hard:
         self.next_button.focus()
         self.points.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
-    def next_question(self, list):
+    def next_question(self, capital_list):
         # When the user has played 15 rounds we take them to the end gui.
         if self.played == 15:
             End(self.score)
             self.game_box.destroy()
         # If they amount of played is not 15 new questions are generated.
         else:
-            question_ans = random.choice(list)
+            question_ans = random.choice(capital_list)
             question = question_ans[1]
             self.answer = question_ans[0]
             self.hint = question_ans[2]
@@ -413,13 +412,10 @@ class Hard:
             self.answer_entry.config(bg="white")
             self.answer_entry.focus()
 
-
     def to_hint(self):
         get_hint = Hint(self)
         get_hint.help_text.configure(text="The country is located in: {}".format(self.hint))
 
-    def to_quit(self):
-        root.destroy()
 
 class Hint:
     def __init__(self, partner):
@@ -461,28 +457,26 @@ class Hint:
 
 
 class End:
-    def __init__(self,score):
-
+    def __init__(self, score):
         # Background color is light yellow
         background = "#FFF4C3"
 
         # Accuracy percentage
-        percentage= score/15
+        percentage = score / 15
 
         # End Frame
         self.end_box = Toplevel()
         self.end_frame = Frame(self.end_box, bg=background)
         self.end_frame.grid(row=0)
-        self.end_box.protocol('WM_DELETE_WINDOW', self.to_quit)
-
+        self.end_box.protocol('WM_DELETE_WINDOW', to_quit)
 
         # Heading row 0
-        self.end_heading = Label(self.end_frame, text="Thanks for playing!", font= "Helvetica 25 bold", bg=background)
+        self.end_heading = Label(self.end_frame, text="Thanks for playing!", font="Helvetica 25 bold", bg=background)
         self.end_heading.grid(row=0, padx=10)
 
         # Game statistics row 1
         self.end_stats = Label(self.end_frame, text="You managed to get \n {} \n right out of \n 15 \n\n"
-                                                    "Accuracy percentage : {:.2f}%" .format(score,percentage),
+                                                    "Accuracy percentage : {:.2f}%".format(score, percentage),
                                bg=background, font="Helvetica 10")
         self.end_stats.grid(row=1)
 
@@ -494,29 +488,25 @@ class End:
 
         # Export button row 0 column 0
         self.end_export_button = Button(self.end_buttons, text="Export", font="Helvetica 10 bold",
-                                        command=lambda:self.to_export(), width=8, bg="#99CCFF", height=2)
-        self.end_export_button.grid(row=0, column=0,padx=6,pady=5)
+                                        command=lambda: self.to_export(), width=8, bg="#99CCFF", height=2)
+        self.end_export_button.grid(row=0, column=0, padx=6, pady=5)
 
         # Retry Button row 0 column 1
         self.end_retry_button = Button(self.end_buttons, text="Retry", font="Helvetica 10 bold",
                                        command=self.to_start, width=8, bg="#FFFF99", height=2)
-        self.end_retry_button.grid(row=0, column=1, padx=6,pady=5)
+        self.end_retry_button.grid(row=0, column=1, padx=6, pady=5)
 
         # Quit button row 0 column 2
         self.end_quit_button = Button(self.end_buttons, text="Quit", font="Helvetica 10 bold",
                                       command=root.quit, width=8, bg="#FFBAB8", height=2)
-        self.end_quit_button.grid(row=0, column=2, padx=6,pady=5)
+        self.end_quit_button.grid(row=0, column=2, padx=6, pady=5)
 
     def to_start(self):
         Start()
         self.end_box.destroy()
 
-    def to_quit(self):
-        root.quit()
-
     def to_export(self):
         Export(self)
-
 
 
 # main routine
