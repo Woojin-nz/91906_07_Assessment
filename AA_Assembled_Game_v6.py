@@ -60,7 +60,7 @@ class Start:
 
     def help(self):
         get_help = Help(self)
-        get_help.help_text.configure(text="The quiz will present you with a capital \n\n You must identify the "
+        get_help.help_text.configure(text="The quiz will present you with a capital \n You must identify the "
                                           "corresponding country.\n\n There "
                                           "are a total of 15 rounds.\n\n"
                                           "Easy mode is a multiple choice quiz.\n"
@@ -123,6 +123,9 @@ class Easy:
             next(f)
             my_list = list(file)
 
+        # List to store the answers
+        self.game_history = []
+
         # Initial Score
         self.score = 0
 
@@ -178,7 +181,7 @@ class Easy:
         # width, wrap, font height for buttons
         wt = 15
         ht = 2
-        wr = 170
+        wr = 140
         ft = "Helvetica 15"
 
         # Top level answers buttons row 2.0
@@ -218,7 +221,8 @@ class Easy:
         self.hint_button.grid(row=0, column=0, padx=5)
 
         # The Next button to proceed to the next round row 0 column 1
-        self.next_button = Button(self.button_frame, text="Next", command=lambda: self.to_next(my_list), width=5,
+        self.next_button = Button(self.button_frame, text="Next",
+                                  command=lambda: self.to_next(my_list, self.game_history), width=5,
                                   font="Helvetica 10 bold")
         self.next_button.grid(row=0, column=1, padx=5)
 
@@ -243,19 +247,20 @@ class Easy:
         if location == self.answer:
             self.answer_box.config(text="Correct!", fg="green")
             self.score += 1
+            correct_answer = "{}, your answer was correct".format(self.answer)
+            self.game_history.append(correct_answer)
         else:
             self.answer_box.config(text="Incorrect, correct country is {}".format(self.answer), fg="red")
-
+            incorrect_answer = "{}, you guessed {}".format(self.answer, location)
+            self.game_history.append(incorrect_answer)
 
         # Update the score that the user has
         self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
-
-
-    def to_next(self, capital_list):
+    def to_next(self, capital_list, history):
         # if the amount of rounds played is 15 the player is taken to the end screen
         if self.played == 15:
-            End(self.score)
+            End(self.score, history)
             self.game_box.destroy()
 
         # Else the quiz repeats and new questions are asked.
@@ -315,7 +320,7 @@ class Hard:
         background = "#FFF4C3"
 
         # Game History List
-        self.game_history =[]
+        self.game_history = []
 
         # Import the csv file, name of csv file goes here...
         with open('country-capitals.csv', 'r') as f:
@@ -371,13 +376,13 @@ class Hard:
 
         # Button to go to the next question row 2.0 column 2
         self.next_button = Button(self.button_frame, text="Next", font="Helvetica 10 bold",
-                                  command=lambda: self.next_question(my_list,self.game_history))
+                                  command=lambda: self.next_question(my_list, self.game_history))
         self.next_button.grid(row=0, column=2, padx=5)
         self.next_button.config(state=DISABLED)
-        self.next_button.bind('<Return>', lambda e: self.next_question(my_list,self.game_history))
+        self.next_button.bind('<Return>', lambda e: self.next_question(my_list, self.game_history))
 
         # Correct or incorrect Label row 3
-        self.answer_box = Label(self.game_frame, text="", font="Helvetica", bg=background, width=33)
+        self.answer_box = Label(self.game_frame, text="", font="Helvetica", bg=background, width=35, wrap=170)
         self.answer_box.grid(row=3)
 
         # Total amount of correct answers and games played row 4
@@ -404,19 +409,18 @@ class Hard:
 
             # History to be appended if incorrect
             guess_history_incorrect = \
-                "{}, you guessed {}".format(self.answer,user_answer)
+                "{}, you guessed {}".format(self.answer, user_answer)
             self.game_history.append(guess_history_incorrect)
-
 
         self.next_button.config(state=NORMAL)
         self.answer_button.config(state=DISABLED)
         self.next_button.focus()
-        self.points.config(text="{} correct / {} rounds played" .format(self.score, self.played))
+        self.points.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
-    def next_question(self, capital_list,guesses):
+    def next_question(self, capital_list, guesses):
         # When the user has played 15 rounds we take them to the end gui.
         if self.played == 15:
-            End(self.score,guesses)
+            End(self.score, guesses)
             self.game_box.destroy()
         # If they amount of played is not 15 new questions are generated.
         else:
@@ -477,7 +481,7 @@ class Hint:
 
 
 class End:
-    def __init__(self, score,history):
+    def __init__(self, score, history):
         # Background color is light yellow
         background = "#FFF4C3"
 
@@ -525,14 +529,15 @@ class End:
         Start()
         self.end_box.destroy()
 
-    def to_export(self,history):
-        Export(self,history)
+    def to_export(self, history):
+        Export(self, history)
+
 
 class Export:
-    def __init__(self,partner,history):
+    def __init__(self, partner, history):
 
         # Background Color is light yellow
-        background="#FFF4C3"
+        background = "#FFF4C3"
 
         # disable export button
         partner.end_export_button.config(state=DISABLED)
@@ -560,7 +565,7 @@ class Export:
         # Warning text (label, row2)
         self.export_text = Label(self.export_frame, text="If the filename you entered already exists,"
                                                          "it will be overwritten.", justify=LEFT,
-                                 fg='red', font="Arial 10 italic",bg=background,
+                                 fg='red', font="Arial 10 italic", bg=background,
                                  wrap=225, padx=10, pady=10)
         self.export_text.grid(row=2, pady=10)
 
@@ -580,7 +585,7 @@ class Export:
 
         # Save and Cancel buttons (row 0 of save_cancel_frame)
         self.save_button = Button(self.save_cancel_frame, text="Save",
-                                  command=partial(lambda: self.save_history(partner,history)))
+                                  command=partial(lambda: self.save_history(partner, history)))
         self.save_button.grid(row=0, column=0)
 
         self.cancel_button = Button(self.save_cancel_frame, text="Cancel",
@@ -593,6 +598,7 @@ class Export:
         self.export_box.destroy()
 
     def save_history(self, partner, history):
+        global problem
 
         valid_char = "[A-Za-z0-9_]"
         has_error = "no"
@@ -619,7 +625,6 @@ class Export:
             self.save_error_label.config(text="Invalid filename - {}".format(problem))
 
             self.filename_entry.config(bg="#ffafaf")
-
 
         else:
             filename = filename + ".txt"
