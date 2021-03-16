@@ -136,6 +136,7 @@ class Easy:
 
         # chooses four different countries / capitals from the list
         question_ans = random.choice(my_list)
+        my_list.remove(question_ans)
         yes = random.choice(my_list)
         no = random.choice(my_list)
         ok = random.choice(my_list)
@@ -183,7 +184,7 @@ class Easy:
         # width, wrap, font height for buttons
         wt = 20
         ht = 2
-        wr = 140
+        wr = 160
         ft = "Helvetica 15"
 
         # Top level answers buttons row 2.0
@@ -250,11 +251,11 @@ class Easy:
         if location == self.answer:
             self.answer_box.config(text="Correct!", fg="green")
             self.score += 1
-            correct_answer = "{}, the answer was {} \u2713 \n".format(self.question,self.answer)
+            correct_answer = "{}, the answer was {} \u2713".format(self.question,self.answer)
             self.game_history.append(correct_answer)
         else:
             self.answer_box.config(text="Incorrect, correct country is {}".format(self.answer), fg="red")
-            incorrect_answer = "{}, the answer was {} \u274c, you answered \n".format(self.question,self.answer,location)
+            incorrect_answer = "{}, the answer was {} \u274c, you answered {}".format(self.question,self.answer,location)
             self.game_history.append(incorrect_answer)
 
         # Update the score that the user has
@@ -279,6 +280,7 @@ class Easy:
 
             # chooses four different countries / capitals from the list
             question_ans = random.choice(capital_list)
+            capital_list.remove(question_ans)
             yes = random.choice(capital_list)
             no = random.choice(capital_list)
             ok = random.choice(capital_list)
@@ -337,6 +339,7 @@ class Hard:
 
         # choose an item from the main list, this item is itself a list
         question_ans = random.choice(my_list)
+        my_list.remove(question_ans)
 
         # Initial Score
         self.score = int(0)
@@ -407,7 +410,7 @@ class Hard:
 
             # History to be appended if correct
             guess_history_correct = \
-                "{}, the answer was {} \u2705 \n".format(self.question,self.answer)
+                "{}, the answer was {} \u2705".format(self.question,self.answer)
             self.game_history.append(guess_history_correct)
 
         else:
@@ -416,7 +419,7 @@ class Hard:
 
             # History to be appended if incorrect
             guess_history_incorrect = \
-                "{}, the answer was {} \u274c , you answered {} \n".format(self.question,self.answer,user_answer)
+                "{}, the answer was {} \u274c , you answered {}".format(self.question,self.answer,user_answer)
             self.game_history.append(guess_history_incorrect)
 
         self.next_button.config(state=NORMAL)
@@ -433,6 +436,7 @@ class Hard:
         # If they amount of played is not 15 new questions are generated.
         else:
             question_ans = random.choice(capital_list)
+            capital_list.remove(question_ans)
             self.question = question_ans[1]
             self.answer = question_ans[0]
             self.hint = question_ans[2]
@@ -522,18 +526,18 @@ class End:
 
         # Export button row 0 column 0
         self.end_export_button = Button(self.end_buttons, text="Export", font="Helvetica 10 bold",
-                                        command=lambda: self.to_export(history,difficulty,score,percentage), width=8
+                                        command=lambda: self.to_export(history,difficulty,score,percentage), width=10
                                         , bg="#99CCFF", height=2)
         self.end_export_button.grid(row=0, column=0, padx=6, pady=5)
 
         # Retry Button row 0 column 1
-        self.end_retry_button = Button(self.end_buttons, text="Retry", font="Helvetica 10 bold",
-                                       command=self.to_start, width=8, bg="#FFFF99", height=2)
+        self.end_retry_button = Button(self.end_buttons, text="Play Again!", font="Helvetica 10 bold",
+                                       command=self.to_start, width=10, bg="#FFFF99", height=2)
         self.end_retry_button.grid(row=0, column=1, padx=6, pady=5)
 
         # Quit button row 0 column 2
         self.end_quit_button = Button(self.end_buttons, text="Quit", font="Helvetica 10 bold",
-                                      command=root.quit, width=8, bg="#FFBAB8", height=2)
+                                      command=root.quit, width=10, bg="#FFBAB8", height=2)
         self.end_quit_button.grid(row=0, column=2, padx=6, pady=5)
 
     def to_start(self):
@@ -652,7 +656,17 @@ class Export:
 
             f.write("\n\nGame Details\n\n"
                     "You got {} out of 15 correct\n\n"
-                    "Percentage Correct = {:.2f}%".format(score,percentage))
+                    "Percentage Correct = {:.2f}% \n\n".format(score,percentage))
+            if percentage >= 90:
+                f.write("Fantastic Job!!")
+            elif percentage >= 80:
+                f.write("Great Effort")
+            elif percentage >= 60:
+                f.write("Good Try")
+            elif percentage >= 20:
+                f.write("Could be better")
+            else:
+                f.write("What happened? Better luck next time")
 
             f.close()
 
