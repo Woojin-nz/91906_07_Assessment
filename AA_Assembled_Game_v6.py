@@ -10,7 +10,8 @@ class Start:
         background = "#FFF4C3"
 
         # Start GUI
-        self.start_frame = Frame(padx=10, pady=10, bg=background)
+        self.start_box = Toplevel()
+        self.start_frame = Frame(self.start_box,padx=10, pady=10, bg=background)
         self.start_frame.grid()
 
         # Country Capital Quiz Heading row 0
@@ -51,11 +52,11 @@ class Start:
 
     def to_easy(self):
         Easy()
-        self.start_frame.destroy()
+        self.start_box.destroy()
 
     def to_hard(self):
         Hard()
-        self.start_frame.destroy()
+        self.start_box.destroy()
 
     def help(self):
         get_help = Help(self)
@@ -661,6 +662,7 @@ class Export:
 # main routine
 if __name__ == "__main__":
     root = Tk()
+    root.withdraw()
     root.title("Country Quiz")
     something = Start()
     root.mainloop()
