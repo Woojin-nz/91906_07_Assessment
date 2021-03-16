@@ -21,7 +21,7 @@ class Start:
 
         # Sub text and Instructions for the game row 1
         self.subtext_label = Label(self.start_frame, text="How well do you know world's capitals? \n\n"
-                                                          "You'll be presented with 15 capitals from a list of 242 "
+                                                          "You'll be presented with capitals from a list of 242 "
                                                           "capitals.\n "
                                                           "You'll need to match the capitals with their corresponding "
                                                           "country. \n\n "
@@ -61,8 +61,7 @@ class Start:
     def help(self):
         get_help = Help(self)
         get_help.help_text.configure(text="The quiz will present you with a capital \nYou must identify the "
-                                          "corresponding country.\n\nThere "
-                                          "are a total of 15 rounds.\n\n"
+                                          "corresponding country.\n\n"
                                           "Easy mode is a multiple choice quiz.\n"
                                           "Hard mode you must type in the answer.\n\n"
                                         "The answers can be case insensitive.\nHowever, they must have proper "
@@ -214,20 +213,26 @@ class Easy:
                                  bg=background)
         self.score_label.grid(row=3)
 
-        # Button frames for next and hint button row 4
+        # Button frames for next, quit and hint button row 4
         self.button_frame = Frame(self.game_box, bg=background)
         self.button_frame.grid(row=4)
 
-        # The hint button to get the hint for this country row 0 column 0
+        # The quit button so users can quit the game early row 0 column 1
+        self.quit_button = Button(self.button_frame, text="QUIT", command=lambda:self.to_end(self.game_history)
+                                  , width=7,
+                                  font="Helvetica 10 bold")
+        self.quit_button.grid(row=0, column=0, padx=5, pady=8)
+
+        # The hint button to get the hint for this country row 0 column 1
         self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=7,
                                   font="Helvetica 10 bold")
-        self.hint_button.grid(row=0, column=0, padx=5,pady=8)
+        self.hint_button.grid(row=0, column=1, padx=5,pady=8)
 
-        # The Next button to proceed to the next round row 0 column 1
+        # The Next button to proceed to the next round row 0 column 2
         self.next_button = Button(self.button_frame, text="Next",
                                   command=lambda: self.to_next(my_list, self.game_history), width=7,
                                   font="Helvetica 10 bold")
-        self.next_button.grid(row=0, column=1, padx=5,pady=8)
+        self.next_button.grid(row=0, column=2, padx=5,pady=8)
 
         # Disable the next button initially,
         self.next_button.config(state=DISABLED)
@@ -265,7 +270,8 @@ class Easy:
         # if the amount of rounds played is 15 the player is taken to the end screen
         if self.played == 15:
             easy=1
-            End(self.score, history,easy)
+            played=15
+            End(self.score, history,easy,played)
             self.game_box.destroy()
 
         # Else the quiz repeats and new questions are asked.
@@ -320,6 +326,11 @@ class Easy:
         get_hint = Hint(self)
         get_hint.help_text.configure(text="The country is located in: {}".format(self.hint))
 
+    def to_end(self,history):
+        easy=1
+        End(self.score,history,easy,self.played)
+        self.game_box.destroy()
+
 
 class Hard:
     def __init__(self):
@@ -373,20 +384,25 @@ class Hard:
         self.button_frame = Frame(self.game_frame, bg=background)
         self.button_frame.grid(row=2)
 
-        # Button to press when users have entered the country row 2.0 column 0
+        # Button to prematurely end row 2.0 column 0
+        self.quit_button = Button(self.button_frame, text="Quit", font="Helvetica 10 bold",
+                                  command=lambda:self.to_end(self.game_history))
+        self.quit_button.grid(row=0,column=0,padx=5)
+
+        # Button to press when users have entered the country row 2.0 column 1
         self.answer_button = Button(self.button_frame, text="Guess", font="Helvetica 10 bold",
                                     command=lambda: self.check_answer())
-        self.answer_button.grid(row=0, column=0, padx=5)
+        self.answer_button.grid(row=0, column=1, padx=5)
 
-        # The hint button to get the hint for this country row 2 column 1
+        # The hint button to get the hint for this country row 2 column 2
         self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=5,
                                   font="Helvetica 10 bold")
-        self.hint_button.grid(row=0, column=1, padx=5)
+        self.hint_button.grid(row=0, column=2, padx=5)
 
-        # Button to go to the next question row 2.0 column 2
+        # Button to go to the next question row 2.0 column 3
         self.next_button = Button(self.button_frame, text="Next", font="Helvetica 10 bold",
                                   command=lambda: self.next_question(my_list, self.game_history))
-        self.next_button.grid(row=0, column=2, padx=5)
+        self.next_button.grid(row=0, column=3, padx=5)
         self.next_button.config(state=DISABLED)
         self.next_button.bind('<Return>', lambda e: self.next_question(my_list, self.game_history))
 
@@ -410,7 +426,7 @@ class Hard:
 
             # History to be appended if correct
             guess_history_correct = \
-                "{}, the answer was {} \u2705".format(self.question,self.answer)
+                "{}, the answer was {} \u2713".format(self.question,self.answer)
             self.game_history.append(guess_history_correct)
 
         else:
@@ -431,7 +447,8 @@ class Hard:
         # When the user has played 15 rounds we take them to the end gui.
         if self.played == 15:
             hard=0
-            End(self.score, guesses,hard)
+            played=15
+            End(self.score, guesses,hard,played)
             self.game_box.destroy()
         # If they amount of played is not 15 new questions are generated.
         else:
@@ -452,6 +469,11 @@ class Hard:
     def to_hint(self):
         get_hint = Hint(self)
         get_hint.help_text.configure(text="The country is located in: {}".format(self.hint))
+
+    def to_end(self,history):
+        easy=1
+        End(self.score,history,easy,self.played)
+        self.game_box.destroy()
 
 
 class Hint:
@@ -494,10 +516,9 @@ class Hint:
 
 
 class End:
-    def __init__(self, score, history,difficulty):
+    def __init__(self, score, history,difficulty,played):
         # Background color is light yellow
         background = "#FFF4C3"
-
 
         # Accuracy percentage
         percentage = (score/15) * 100
@@ -513,8 +534,8 @@ class End:
         self.end_heading.grid(row=0, padx=10)
 
         # Game statistics row 1
-        self.end_stats = Label(self.end_frame, text="You managed to get \n {} \n right out of \n 15 \n\n"
-                                                    "Accuracy percentage : {:.2f}%".format(score, percentage),
+        self.end_stats = Label(self.end_frame, text="You managed to get \n {} \n right out of \n {} \n\n"
+                                                    "Accuracy percentage : {:.2f}%".format(score,played, percentage),
                                bg=background, font="Helvetica 10")
         self.end_stats.grid(row=1)
 
@@ -526,7 +547,7 @@ class End:
 
         # Export button row 0 column 0
         self.end_export_button = Button(self.end_buttons, text="Export", font="Helvetica 10 bold",
-                                        command=lambda: self.to_export(history,difficulty,score,percentage), width=10
+                                        command=lambda: self.to_export(history,difficulty,score,percentage,played), width=10
                                         , bg="#99CCFF", height=2)
         self.end_export_button.grid(row=0, column=0, padx=6, pady=5)
 
@@ -544,12 +565,12 @@ class End:
         Start()
         self.end_box.destroy()
 
-    def to_export(self, history,difficulty,score,percentage):
-        Export(self, history,difficulty,score,percentage)
+    def to_export(self, history,difficulty,score,percentage,played):
+        Export(self, history,difficulty,score,percentage,played)
 
 
 class Export:
-    def __init__(self, partner, history,difficulty,score,percentage):
+    def __init__(self, partner, history,difficulty,score,percentage,played):
 
         # Background Color is light yellow
         background = "#FFF4C3"
@@ -599,20 +620,20 @@ class Export:
         self.save_cancel_frame.grid(row=5, pady=10)
 
         # Save and Cancel buttons (row 0 of save_cancel_frame)
-        self.save_button = Button(self.save_cancel_frame, text="Save",
-                                  command=partial(lambda: self.save_history(partner, history,difficulty,score,percentage)))
-        self.save_button.grid(row=0, column=0)
+        self.save_button = Button(self.save_cancel_frame, text="Save", width=5,
+                                  command=partial(lambda: self.save_history(partner, history,difficulty,score,percentage,played)))
+        self.save_button.grid(row=0, column=0,padx=5,pady=5)
 
-        self.cancel_button = Button(self.save_cancel_frame, text="Cancel",
+        self.cancel_button = Button(self.save_cancel_frame, text="Cancel",width=5,
                                     command=partial(self.close_export, partner))
-        self.cancel_button.grid(row=0, column=1)
+        self.cancel_button.grid(row=0, column=1,padx=5,pady=5)
 
     def close_export(self, partner):
         # Put export button back to normal...
         partner.end_export_button.config(state=NORMAL)
         self.export_box.destroy()
 
-    def save_history(self, partner, history,difficulty,score,percentage):
+    def save_history(self, partner, history,difficulty,score,percentage,played):
         global problem
 
         valid_char = "[A-Za-z0-9_]"
@@ -655,8 +676,8 @@ class Export:
                 f.write(item + "\n")
 
             f.write("\n\nGame Details\n\n"
-                    "You got {} out of 15 correct\n\n"
-                    "Percentage Correct = {:.2f}% \n\n".format(score,percentage))
+                    "You got {} out of {} correct\n\n"
+                    "Percentage Correct = {:.2f}% \n\n".format(score,played,percentage))
             if percentage >= 90:
                 f.write("Fantastic Job!!")
             elif percentage >= 80:
