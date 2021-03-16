@@ -6,11 +6,12 @@ import re
 
 class Start:
     def __init__(self):
-        # Color is light yellow for the background
+        # Color is light yellow
         background = "#FFF4C3"
 
         # Start GUI
-        self.start_frame = Frame(padx=10, pady=10, bg=background)
+        self.start_box = Toplevel()
+        self.start_frame = Frame(self.start_box,padx=10, pady=10, bg=background)
         self.start_frame.grid()
 
         # Country Capital Quiz Heading row 0
@@ -51,11 +52,11 @@ class Start:
 
     def to_easy(self):
         Easy()
-        self.start_frame.destroy()
+        self.start_box.destroy()
 
     def to_hard(self):
         Hard()
-        self.start_frame.destroy()
+        self.start_box.destroy()
 
     def help(self):
         get_help = Help(self)
@@ -182,7 +183,7 @@ class Easy:
         # width, wrap, font height for buttons
         wt = 20
         ht = 2
-        wr = 200
+        wr = 140
         ft = "Helvetica 15"
 
         # Top level answers buttons row 2.0
@@ -591,16 +592,16 @@ class Export:
 
         # Save / Cancel Frame (row 5)
         self.save_cancel_frame = Frame(self.export_frame, bg=background)
-        self.save_cancel_frame.grid(row=5,pady=10)
+        self.save_cancel_frame.grid(row=5, pady=10)
 
         # Save and Cancel buttons (row 0 of save_cancel_frame)
-        self.save_button = Button(self.save_cancel_frame, text="Save", width=5,
+        self.save_button = Button(self.save_cancel_frame, text="Save",
                                   command=partial(lambda: self.save_history(partner, history,difficulty,score,percentage)))
-        self.save_button.grid(row=0, column=0, padx=5)
+        self.save_button.grid(row=0, column=0)
 
-        self.cancel_button = Button(self.save_cancel_frame, text="Cancel", width=5,
+        self.cancel_button = Button(self.save_cancel_frame, text="Cancel",
                                     command=partial(self.close_export, partner))
-        self.cancel_button.grid(row=0, column=1,padx=5)
+        self.cancel_button.grid(row=0, column=1)
 
     def close_export(self, partner):
         # Put export button back to normal...
@@ -661,6 +662,7 @@ class Export:
 # main routine
 if __name__ == "__main__":
     root = Tk()
+    root.withdraw()
     root.title("Country Quiz")
     something = Start()
     root.mainloop()
