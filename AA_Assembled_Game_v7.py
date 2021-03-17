@@ -9,6 +9,8 @@ class Start:
         # Color is light yellow
         background = "#FFF4C3"
 
+        self.rounds = 0
+
         # Start GUI
         self.start_box = Toplevel()
         self.start_frame = Frame(self.start_box,padx=10, pady=10, bg=background)
@@ -72,16 +74,16 @@ class Start:
         self.help_button.grid(row=5, pady=5)
 
     def to_easy(self):
-        entry_number=self.round_entry.get()
-        if len(entry_number) == 0:
-            rounds = int(999999999)
-            Easy(rounds)
+        self.rounds=self.round_entry.get()
+        if len(self.rounds) == 0:
+            self.rounds = int(999999999)
+            Easy(self)
             self.start_box.destroy()
         else:
             try:
-                rounds = int(entry_number)
-                if rounds >= 1:
-                        Easy(rounds)
+                self.rounds = int(self.rounds)
+                if self.rounds >= 1:
+                        Easy(self)
                         self.start_box.destroy()
                 else:
                     self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
@@ -92,16 +94,16 @@ class Start:
 
 
     def to_hard(self):
-        entry_number=self.round_entry.get()
-        if len(entry_number) == 0:
-            rounds = int(999999999)
-            Hard(rounds)
+        self.rounds=self.round_entry.get()
+        if len(self.rounds) == 0:
+            self.rounds = 999999999
+            Hard(self)
             self.start_box.destroy()
         else:
-            rounds = int(entry_number)
+            self.rounds = int(self.rounds)
             try:
-                if rounds >= 1:
-                        Hard(rounds)
+                if self.rounds >= 1:
+                        Hard(self)
                         self.start_box.destroy()
                 else:
                     self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
@@ -165,8 +167,7 @@ def to_quit():
 
 
 class Easy:
-    def __init__(self,rounds):
-        print(rounds)
+    def __init__(self,partner):
         # Background color is light yellow
         background = "#FFF4C3"
 
@@ -184,8 +185,7 @@ class Easy:
         self.score = 0
 
         # Amount of total rounds
-        self.total_rounds = IntVar()
-        self.total_rounds.set(rounds)
+        self.total_rounds = partner.rounds
 
         # Amounts of games played
         self.played = 0
@@ -275,7 +275,7 @@ class Easy:
         self.button_frame.grid(row=4)
 
         # The quit button so users can quit the game early row 0 column 1
-        self.quit_button = Button(self.button_frame, text="QUIT", command=lambda:self.to_end(self.game_history)
+        self.quit_button = Button(self.button_frame, text="Finish Early", command=lambda:self.to_end(self.game_history)
                                   , width=7,
                                   font="Helvetica 10 bold")
         self.quit_button.grid(row=0, column=0, padx=5, pady=8)
@@ -390,7 +390,7 @@ class Easy:
 
 
 class Hard:
-    def __init__(self,rounds):
+    def __init__(self,partner):
 
         # Background color is light yellow
         background = "#FFF4C3"
@@ -413,9 +413,7 @@ class Hard:
         self.score = 0
 
         # Amount of total rounds
-        self.total_rounds = IntVar()
-        self.total_rounds.set(rounds)
-        print(self.total_rounds)
+        self.total_rounds = partner.rounds
 
         # Amounts of games played
         self.played = 0
@@ -447,7 +445,7 @@ class Hard:
         self.button_frame.grid(row=2)
 
         # Button to prematurely end row 2.0 column 0
-        self.quit_button = Button(self.button_frame, text="Quit", font="Helvetica 10 bold",
+        self.quit_button = Button(self.button_frame, text="Finish Early", font="Helvetica 10 bold",
                                   command=lambda:self.to_end(self.game_history))
         self.quit_button.grid(row=0,column=0,padx=5)
 
@@ -583,7 +581,10 @@ class End:
         background = "#FFF4C3"
 
         # Accuracy percentage
-        percentage = (score/played) * 100
+        if played == 0:
+            percentage = 0
+        else:
+            percentage = (score/played) * 100
 
         # End Frame
         self.end_box = Toplevel()
