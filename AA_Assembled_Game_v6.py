@@ -684,10 +684,12 @@ class Export:
                 f.write("Great Effort")
             elif percentage >= 60:
                 f.write("Good Try")
+            elif percentage >= 40:
+                f.write("Better luck next time")
             elif percentage >= 20:
                 f.write("Could be better")
             else:
-                f.write("What happened? Better luck next time")
+                f.write("What happened?")
 
             f.close()
 
