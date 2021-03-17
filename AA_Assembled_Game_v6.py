@@ -521,7 +521,7 @@ class End:
         background = "#FFF4C3"
 
         # Accuracy percentage
-        percentage = (score/15) * 100
+        percentage = (score/played) * 100
 
         # End Frame
         self.end_box = Toplevel()
