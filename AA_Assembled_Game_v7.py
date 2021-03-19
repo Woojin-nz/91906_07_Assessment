@@ -77,11 +77,13 @@ class Start:
         self.rounds=self.round_entry.get()
         if len(self.rounds) == 0:
             self.rounds = int(999999999)
+            self.infinity = 1
             Easy(self)
             self.start_box.destroy()
         else:
             try:
                 self.rounds = int(self.rounds)
+                self.infinity = 0
                 if self.rounds >= 1:
                         Easy(self)
                         self.start_box.destroy()
@@ -97,10 +99,12 @@ class Start:
         self.rounds=self.round_entry.get()
         if len(self.rounds) == 0:
             self.rounds = 999999999
+            self.infinity = 1
             Hard(self)
             self.start_box.destroy()
         else:
             self.rounds = int(self.rounds)
+            self.infinity = no
             try:
                 if self.rounds >= 1:
                         Hard(self)
@@ -187,12 +191,17 @@ class Easy:
         # Amount of total rounds
         self.total_rounds = partner.rounds
 
+        self.infinity = partner.infinity
+
         # Amounts of games played
         self.played = 0
 
         # chooses four different countries / capitals from the list
         question_ans = random.choice(my_list)
-        my_list.remove(question_ans)
+        if self.infinity == 0:
+            my_list.remove(question_ans)
+        else:
+            pass
         yes = random.choice(my_list)
         no = random.choice(my_list)
         ok = random.choice(my_list)
@@ -276,18 +285,18 @@ class Easy:
 
         # The quit button so users can quit the game early row 0 column 1
         self.quit_button = Button(self.button_frame, text="Finish Early", command=lambda:self.to_end(self.game_history)
-                                  , width=7,
+                                  , width=10,
                                   font="Helvetica 10 bold")
         self.quit_button.grid(row=0, column=0, padx=5, pady=8)
 
         # The hint button to get the hint for this country row 0 column 1
-        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=7,
+        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=10,
                                   font="Helvetica 10 bold")
         self.hint_button.grid(row=0, column=1, padx=5,pady=8)
 
         # The Next button to proceed to the next round row 0 column 2
         self.next_button = Button(self.button_frame, text="Next",
-                                  command=lambda: self.to_next(my_list, self.game_history), width=7,
+                                  command=lambda: self.to_next(my_list, self.game_history,self.infinity), width=10,
                                   font="Helvetica 10 bold")
         self.next_button.grid(row=0, column=2, padx=5,pady=8)
 
@@ -323,7 +332,7 @@ class Easy:
         # Update the score that the user has
         self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
-    def to_next(self, capital_list, history):
+    def to_next(self, capital_list, history,infinity):
         # if the amount of rounds played is 15 the player is taken to the end screen
         if self.played == self.total_rounds:
             easy=1
@@ -343,7 +352,10 @@ class Easy:
 
             # chooses four different countries / capitals from the list
             question_ans = random.choice(capital_list)
-            capital_list.remove(question_ans)
+            if infinity == 0:
+                capital_list.remove(question_ans)
+            else:
+                pass
             yes = random.choice(capital_list)
             no = random.choice(capital_list)
             ok = random.choice(capital_list)
@@ -398,6 +410,8 @@ class Hard:
         # Game History List
         self.game_history = []
 
+        self.infinity = partner.infinity
+
         # Import the csv file, name of csv file goes here...
         with open('country-capitals.csv', 'r') as f:
             # make csv file into list
@@ -407,7 +421,10 @@ class Hard:
 
         # choose an item from the main list, this item is itself a list
         question_ans = random.choice(my_list)
-        my_list.remove(question_ans)
+        if self.infinity == 0:
+            my_list.remove(question_ans)
+        else:
+            pass
 
         # Initial Score
         self.score = 0
@@ -461,10 +478,10 @@ class Hard:
 
         # Button to go to the next question row 2.0 column 3
         self.next_button = Button(self.button_frame, text="Next", font="Helvetica 10 bold",
-                                  command=lambda: self.next_question(my_list, self.game_history))
+                                  command=lambda: self.next_question(my_list, self.game_history,self.infinity))
         self.next_button.grid(row=0, column=3, padx=5)
         self.next_button.config(state=DISABLED)
-        self.next_button.bind('<Return>', lambda e: self.next_question(my_list, self.game_history))
+        self.next_button.bind('<Return>', lambda e: self.next_question(my_list, self.game_history,self.infinity))
 
         # Correct or incorrect Label row 3
         self.answer_box = Label(self.game_frame, text="", font="Helvetica", bg=background, width=35, wrap=170)
@@ -503,7 +520,7 @@ class Hard:
         self.next_button.focus()
         self.points.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
-    def next_question(self, capital_list, guesses):
+    def next_question(self, capital_list, guesses,infinity):
         # When the user has played 15 rounds we take them to the end gui.
         if self.played == self.total_rounds:
             hard=0
@@ -513,7 +530,10 @@ class Hard:
         # If they amount of played is not 15 new questions are generated.
         else:
             question_ans = random.choice(capital_list)
-            capital_list.remove(question_ans)
+            if infinity == 0:
+                capital_list.remove(question_ans)
+            else:
+                pass
             self.question = question_ans[1]
             self.answer = question_ans[0]
             self.hint = question_ans[2]
