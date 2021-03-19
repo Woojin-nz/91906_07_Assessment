@@ -88,7 +88,8 @@ class Start:
                         Easy(self)
                         self.start_box.destroy()
                 else:
-                    self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
+                    self.round_warning.config(bg="red", text="Please enter a positive integer or remain blank",
+                                              fg="#FFFFFF")
                     self.round_entry.delete(0, "end")
             except ValueError:
                 self.round_warning.config(bg="red",text="Please enter a number or remain blank",fg="#FFFFFF")
@@ -103,9 +104,9 @@ class Start:
             Hard(self)
             self.start_box.destroy()
         else:
-            self.rounds = int(self.rounds)
-            self.infinity = no
             try:
+                self.rounds = int(self.rounds)
+                self.infinity = 0
                 if self.rounds >= 1:
                         Hard(self)
                         self.start_box.destroy()
@@ -123,9 +124,6 @@ class Start:
                                           "Hard mode you must type in the answer.\n\n"
                                         "The answers can be case insensitive.\nHowever, they must have proper "
                                           "spacing and spelling.")
-
-
-
 
 class Help:
     def __init__(self, partner):
@@ -165,10 +163,8 @@ class Help:
         partner.help_button.config(state=NORMAL)
         self.help_box.destroy()
 
-
 def to_quit():
     root.destroy()
-
 
 class Easy:
     def __init__(self,partner):
@@ -400,7 +396,6 @@ class Easy:
         End(self.score,history,easy,self.played)
         self.game_box.destroy()
 
-
 class Hard:
     def __init__(self,partner):
 
@@ -555,7 +550,6 @@ class Hard:
         End(self.score,history,easy,self.played)
         self.game_box.destroy()
 
-
 class Hint:
     def __init__(self, partner):
         background = "#FFF4C3"
@@ -593,7 +587,6 @@ class Hint:
         # Put help button back to normal...
         partner.hint_button.config(state=NORMAL)
         self.help_box.destroy()
-
 
 class End:
     def __init__(self, score, history,difficulty,played):
@@ -650,7 +643,6 @@ class End:
 
     def to_export(self, history,difficulty,score,percentage,played):
         Export(self, history,difficulty,score,percentage,played)
-
 
 class Export:
     def __init__(self, partner, history,difficulty,score,percentage,played):
@@ -777,7 +769,6 @@ class Export:
             f.close()
 
             self.close_export(partner)
-
 
 # main routine
 if __name__ == "__main__":
