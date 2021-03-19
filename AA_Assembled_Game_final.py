@@ -92,7 +92,7 @@ class Start:
                                               fg="#FFFFFF")
                     self.round_entry.delete(0, "end")
             except ValueError:
-                self.round_warning.config(bg="red",text="Please enter a number or remain blank",fg="#FFFFFF")
+                self.round_warning.config(bg="red",text="Please enter a positive integer or remain blank",fg="#FFFFFF")
                 self.round_entry.delete(0,"end")
 
 
@@ -111,10 +111,10 @@ class Start:
                         Hard(self)
                         self.start_box.destroy()
                 else:
-                    self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
+                    self.round_warning.config(bg="red", text="Please enter a positive integer or remain blank", fg="#FFFFFF")
                     self.round_entry.delete(0, "end")
             except ValueError:
-                self.round_warning.config(bg="red",text="Please enter a number or remain blank",fg="#FFFFFF")
+                self.round_warning.config(bg="red",text="Please enter a positive integer or remain blank",fg="#FFFFFF")
                 self.round_entry.delete(0,"end")
     def help(self):
         get_help = Help(self)
