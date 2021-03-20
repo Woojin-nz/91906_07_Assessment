@@ -3,8 +3,6 @@ from functools import partial
 import csv
 import random
 import re
-
-
 class Start:
     def __init__(self):
         # Color is light yellow
@@ -496,15 +494,15 @@ class Hard:
                                   command=lambda: self.to_end(self.game_history))
         self.quit_button.grid(row=0, column=0, padx=5)
 
-        # Button to press when users have entered the country row 2.0 column 1
+        # Button to press when users have entered the country row 2.0 column 2
         self.answer_button = Button(self.button_frame, text="Guess", font="Helvetica 10 bold",
                                     command=lambda: self.check_answer())
-        self.answer_button.grid(row=0, column=1, padx=5)
+        self.answer_button.grid(row=0, column=2, padx=5)
 
-        # The hint button to get the hint for this country row 2 column 2
+        # The hint button to get the hint for this country row 2 column 1
         self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=5,
                                   font="Helvetica 10 bold")
-        self.hint_button.grid(row=0, column=2, padx=5)
+        self.hint_button.grid(row=0, column=1, padx=5)
 
         # Button to go to the next question row 2.0 column 3
         self.next_button = Button(self.button_frame, text="Next", font="Helvetica 10 bold",
