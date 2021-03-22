@@ -75,7 +75,7 @@ class Start:
 
     def to_easy(self):
         self.rounds=self.round_entry.get()
-        if len(self.rounds) == 0:
+        if self.rounds == "":
             self.rounds = int(999999999)
             self.infinity = 1
             Easy(self)
@@ -97,7 +97,7 @@ class Start:
 
     def to_hard(self):
         self.rounds=self.round_entry.get()
-        if len(self.rounds) == 0:
+        if self.rounds == "":
             self.rounds = 999999999
             self.infinity = 1
             Hard(self)
@@ -496,7 +496,7 @@ class Hard:
 
     def check_answer(self):
         user_answer = self.answer_entry.get()
-        if len(user_answer) == 0:
+        if user_answer == "":
             self.answer_box.config(text="Please enter an answer",fg="#F62121")
         else:
             self.next_button.config(state=NORMAL)
