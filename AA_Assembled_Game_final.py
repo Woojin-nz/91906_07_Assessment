@@ -124,8 +124,10 @@ class Start:
                                         "The answers can be case insensitive.\nHowever, they must have proper "
                                           "spacing and spelling.\n\n"
                                           "For the hard mode you may press <Enter> to check your answer and to move on"
-                                          "to the next question.")
-
+                                          "to the next question.\n\n"
+                                        "The End game button will end the current attempt at the quiz and show your "
+                                          "statistics. \n"
+                                        "The statistics can be exported into a text file")
 
 
 
@@ -395,7 +397,7 @@ class Easy:
 
     def to_hint(self):
         get_hint = Hint(self)
-        get_hint.help_text.configure(text="this capital is located in: {}".format(self.hint))
+        get_hint.help_text.configure(text="this country is located in: {}".format(self.hint))
 
     def to_end(self,history):
         easy=1
