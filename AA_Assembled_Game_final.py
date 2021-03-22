@@ -75,7 +75,7 @@ class Start:
 
     def to_easy(self):
         self.rounds=self.round_entry.get()
-        if len(self.rounds) == 0:
+        if self.rounds == "":
             self.rounds = int(999999999)
             self.infinity = 1
             Easy(self)
@@ -97,7 +97,7 @@ class Start:
 
     def to_hard(self):
         self.rounds=self.round_entry.get()
-        if len(self.rounds) == 0:
+        if self.rounds == "":
             self.rounds = 999999999
             self.infinity = 1
             Hard(self)
@@ -124,12 +124,7 @@ class Start:
                                         "The answers can be case insensitive.\nHowever, they must have proper "
                                           "spacing and spelling.\n\n"
                                           "For the hard mode you may press <Enter> to check your answer and to move on"
-                                          "to the next question.\n\n"
-                                        "The <End Quiz> button will end the current quiz you are attempting and take you to the"
-                                          " end screen. "
-                                          "\n\nThe End screen shows your statistics of that current attempt."
-                                          "\nThe stats can be exported")
-
+                                          "to the next question.")
 
 
 
@@ -291,7 +286,7 @@ class Easy:
         self.button_frame.grid(row=4)
 
         # The quit button so users can quit the game early row 0 column 1
-        self.quit_button = Button(self.button_frame, text="End Quiz", command=lambda:self.to_end(self.game_history)
+        self.quit_button = Button(self.button_frame, text="End Game", command=lambda:self.to_end(self.game_history)
                                   , width=10,
                                   font="Helvetica 10 bold")
         self.quit_button.grid(row=0, column=0, padx=5, pady=8)
@@ -400,7 +395,7 @@ class Easy:
 
     def to_hint(self):
         get_hint = Hint(self)
-        get_hint.help_text.configure(text="this country is located in: {}".format(self.hint))
+        get_hint.help_text.configure(text="this capital is located in: {}".format(self.hint))
 
     def to_end(self,history):
         easy=1
@@ -469,7 +464,7 @@ class Hard:
         self.button_frame.grid(row=2)
 
         # Button to prematurely end row 2.0 column 0
-        self.quit_button = Button(self.button_frame, text="End Quiz", font="Helvetica 10 bold",
+        self.quit_button = Button(self.button_frame, text="End Game", font="Helvetica 10 bold",
                                   command=lambda:self.to_end(self.game_history))
         self.quit_button.grid(row=0,column=0,padx=5)
 
@@ -501,7 +496,7 @@ class Hard:
 
     def check_answer(self):
         user_answer = self.answer_entry.get()
-        if len(user_answer) == 0:
+        if user_answer == "":
             self.answer_box.config(text="Please enter an answer",fg="#F62121")
         else:
             self.next_button.config(state=NORMAL)
@@ -559,7 +554,7 @@ class Hard:
 
     def to_hint(self):
         get_hint = Hint(self)
-        get_hint.help_text.configure(text="this country is located in: {}".format(self.hint))
+        get_hint.help_text.configure(text="this capital is located in: {}".format(self.hint))
 
     def to_end(self,history):
         easy=1
