@@ -104,7 +104,7 @@ class Start:
             self.start_box.destroy()
         else:
             self.rounds = int(self.rounds)
-            self.infinity = no
+            self.infinity = 0
             try:
                 if self.rounds >= 1:
                         Hard(self)
